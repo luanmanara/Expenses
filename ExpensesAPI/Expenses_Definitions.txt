@@ -1,0 +1,36 @@
+Wallet - Carteira com informacoes gerais
+	Period - Dados por mes
+		Transaction - Transacoes efetuadas
+			!TransactionType - Cadastro de transaçoes
+
+Wallet -> Apenas uma por pessoa
+	Int Id
+	String Nome
+	Double Saved
+	DateTime CreatedDate
+	DateTime UpdatedDate
+
+Period -> Todo mês precisa ser criado um novo para a carteira
+	Int Id
+	DateTime Month
+	Double Salary
+	Double  
+	int WalletId
+	DateTime CreatedDate
+	DateTime UpdatedDate
+
+Transaction -> Varias transacoes por mes
+	Int Id
+	Double Value
+	Int TransactionType - credito ou debito
+	String Description ou TransactionDefinitionId - FK
+	DateTime DateOfMovement
+	int PeriodId
+	DateTime CreatedDate
+	DateTime UpdatedDate
+
+TransactionDefinition - Definicao da transacao
+	Int Id
+	String Description
+	DateTime CreatedDate
+	DateTime UpdatedDate
