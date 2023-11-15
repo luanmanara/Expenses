@@ -160,7 +160,7 @@ namespace ExpensesAPI.Controllers
                 }
 
                 var periodMapped = _mapper.Map<PeriodUpdateDTO, Period>(periodUpdateDTO, period);
-                await _dbPeriod.UpdateAsync(periodMapped);
+                await _dbPeriod.CloseAsync(periodMapped);
 
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = _mapper.Map<PeriodDTO>(periodMapped);

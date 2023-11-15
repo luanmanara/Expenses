@@ -18,6 +18,14 @@ namespace ExpensesAPI.Repository
         public async Task UpdateAsync(Period entity)
         {
             entity.UpdatedDate = DateTime.Now;
+
+            _dbset.Update(entity);
+            await SaveAsync();
+        }
+
+        public async Task CloseAsync(Period entity)
+        {
+            entity.UpdatedDate = DateTime.Now;
             var wallet = await _dbWallets.GetAsync(u => u.Id == entity.WalletId);
 
             if (entity.IsClosed)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ExpensesAPI.Models;
 using ExpensesAPI.Models.Dto;
+using MagicVilla_VillaAPI.Models.Dto;
 
 namespace ExpensesAPI
 {
@@ -22,6 +23,10 @@ namespace ExpensesAPI
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
             CreateMap<Transaction, TransactionCreateDTO>().ReverseMap();
             CreateMap<Transaction, TransactionUpdateDTO>().ReverseMap().ForAllMembers(opt => opt.Condition((src, dest, value) => value != null));
+
+            //ApplicationUser
+            CreateMap<UserDTO, LoginResponseDTO>().ReverseMap();
+            CreateMap<UserDTO, ApplicationUser>().ReverseMap();
         }
     }
 }

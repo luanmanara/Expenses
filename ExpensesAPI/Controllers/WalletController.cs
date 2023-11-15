@@ -2,6 +2,7 @@
 using ExpensesAPI.Models;
 using ExpensesAPI.Models.Dto;
 using ExpensesAPI.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,7 @@ namespace ExpensesAPI.Controllers
 {
     [Route("api/wallet")]
     [ApiController]
+    [Authorize]
     public class WalletController : ControllerBase
     {
         private readonly IWalletRepository _dbWallet;
