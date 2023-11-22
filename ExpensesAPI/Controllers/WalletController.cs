@@ -10,7 +10,7 @@ namespace ExpensesAPI.Controllers
 {
     [Route("api/wallet")]
     [ApiController]
-    [Authorize]
+    /*[Authorize]*/
     public class WalletController : ControllerBase
     {
         private readonly IWalletRepository _dbWallet;

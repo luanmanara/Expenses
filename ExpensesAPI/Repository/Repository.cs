@@ -24,13 +24,13 @@ namespace ExpensesAPI.Repository
             await SaveAsync();
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
+        public async Task<List<T>> GetAllAsync(List<Expression<Func<T, bool>>> filters = null)
         {
             IQueryable<T> query = _dbset;
 
-            if (filter != null)
+            if (filters != null)
             {
-                query = query.Where(filter);
+                foreach (var filter in filters) query = query.Where(filter);
             }
 
             return await query.ToListAsync();

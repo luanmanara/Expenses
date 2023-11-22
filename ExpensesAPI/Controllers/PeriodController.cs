@@ -2,6 +2,7 @@
 using ExpensesAPI.Models;
 using ExpensesAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace ExpensesAPI.Controllers
@@ -22,11 +23,26 @@ namespace ExpensesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<APIResponse>> GetAllPeriods()
+        public async Task<ActionResult<APIResponse>> GetAllPeriods([FromQuery] int walletId, [FromQuery] bool? isClosed)
         {
             try
             {
-                List<PeriodDTO> PeriodDTOList = _mapper.Map<List<PeriodDTO>>(await _dbPeriod.GetAllAsync());
+                //List<Expression<Func<Period, bool>>> filters = x => true;
+                List<Expression<Func<Period, bool>>> filters = new List<Expression<Func<Period, bool>>>();
+
+                if (walletId > 0)
+                {
+                    Expression<Func<Period, bool>> filterWalletId = x => x.WalletId == walletId;
+                    filters.Add(filterWalletId);
+                }
+
+                if (isClosed != null)
+                {
+                    Expression<Func<Period, bool>> filterIsClosed = x => x.IsClosed == isClosed;
+                    filters.Add(filterIsClosed);
+                }
+
+                List<PeriodDTO> PeriodDTOList = _mapper.Map<List<PeriodDTO>>(await _dbPeriod.GetAllAsync(filters));
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = PeriodDTOList;
                 return Ok(_response);
@@ -152,7 +168,7 @@ namespace ExpensesAPI.Controllers
                     return NotFound(_response);
                 }
 
-                if(period.IsClosed == periodUpdateDTO.IsClosed)
+                if (period.IsClosed == periodUpdateDTO.IsClosed)
                 {
                     string errorMessage = "This period is already " + (period.IsClosed ? "closed" : "opened");
                     ModelState.AddModelError("ErrorMessages", errorMessage);

@@ -2,6 +2,7 @@
 using ExpensesAPI.Models;
 using ExpensesAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace ExpensesAPI.Controllers
@@ -24,11 +25,19 @@ namespace ExpensesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<APIResponse>> GetAllTransactions()
+        public async Task<ActionResult<APIResponse>> GetAllTransactions([FromQuery] int periodId)
         {
             try
             {
-                List<TransactionDTO> transactionDTOList = _mapper.Map<List<TransactionDTO>>(await _dbTransaction.GetAllAsync());
+                List<Expression<Func<Transaction, bool>>> filters = new List<Expression<Func<Transaction, bool>>>();
+
+                if (periodId > 0)
+                {
+                    Expression<Func<Transaction, bool>> filterPeriodId = x => x.PeriodId == periodId;
+                    filters.Add(filterPeriodId);
+                }
+
+                List<TransactionDTO> transactionDTOList = _mapper.Map<List<TransactionDTO>>(await _dbTransaction.GetAllAsync(filters));
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = transactionDTOList;
                 return Ok(_response);
