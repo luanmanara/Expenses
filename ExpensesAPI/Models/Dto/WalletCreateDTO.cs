@@ -8,5 +8,6 @@ namespace ExpensesAPI.Models.Dto
         public string Name { get; set; }
         [Required]
         public double Saved { get; set; }
+        public string UserId { get; set; }
     }
 }

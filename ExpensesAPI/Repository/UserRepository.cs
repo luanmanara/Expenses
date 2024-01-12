@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ExpensesAPI.Data;
 using ExpensesAPI.Models;
+using ExpensesAPI.Models.Dto;
 using ExpensesAPI.Repository.IRepository;
 using MagicVilla_VillaAPI.Models.Dto;
 using Microsoft.AspNetCore.Identity;
@@ -80,7 +81,7 @@ namespace ExpensesAPI.Repository
             return loginResponseDTO;
         }
 
-        public async Task<UserDTO> Register(RegistrationRequestDTO registrationRequestDTO)
+        public async Task<RegisterResponseDTO> Register(RegistrationRequestDTO registrationRequestDTO)
         {
             ApplicationUser user = new ApplicationUser()
             {
@@ -97,7 +98,23 @@ namespace ExpensesAPI.Repository
                     await _userManager.AddToRoleAsync(user, "admin");
                     var userToReturn = _db.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == registrationRequestDTO.UserName.ToLower());
 
-                    return _mapper.Map<UserDTO>(userToReturn);
+                    //return _mapper.Map<UserDTO>(userToReturn);
+                    RegisterResponseDTO registerResponseDTO = new RegisterResponseDTO()
+                    {
+                        User = _mapper.Map<UserDTO>(userToReturn),
+                        IdentityResult = result
+                    };
+
+                    return registerResponseDTO;
+                }else
+                {
+                    RegisterResponseDTO registerResponseDTO = new RegisterResponseDTO()
+                    {
+                        User = null,
+                        IdentityResult = result
+                    };
+
+                    return registerResponseDTO;
                 }
             }
             catch (Exception ex)
@@ -105,7 +122,7 @@ namespace ExpensesAPI.Repository
 
             }
 
-            return new UserDTO();
+            return null;
         }
     }
 }

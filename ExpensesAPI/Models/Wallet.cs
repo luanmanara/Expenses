@@ -10,6 +10,8 @@ namespace ExpensesAPI.Models
         [Required]
         public string Name { get; set; }
         public double Saved { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
     }
