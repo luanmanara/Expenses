@@ -2,11 +2,12 @@
 using ExpensesAPI.Repository.IRepository;
 using MagicVilla_VillaAPI.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 
 namespace ExpensesAPI.Controllers
 {
-    [Route("/auth")]
+    [Route("api/auth")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -24,10 +25,10 @@ namespace ExpensesAPI.Controllers
             LoginResponseDTO loginResponseDTO = await _dbUser.Login(loginRequestDTO);
             if (loginResponseDTO.User == null) 
             {
-                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = false;
                 _response.ErrorMessages.Add("Username or password incorrect!");
-                return BadRequest(_response);
+                return Ok(_response);
             }
 
             _response.StatusCode = HttpStatusCode.OK;
@@ -39,22 +40,27 @@ namespace ExpensesAPI.Controllers
         {
             if(!_dbUser.isUniqueUser(registrationRequestDTO.UserName))
             {
-                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = false;
                 _response.ErrorMessages.Add("Username already exists!");
-                return BadRequest(_response);
-            }
-            var registeredUser = await _dbUser.Register(registrationRequestDTO);
-            if (registeredUser == null)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Error while registering!");
-                return BadRequest(_response);
+                return Ok(_response);
             }
 
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.Result = registeredUser;
+            var registerResponseDTO = await _dbUser.Register(registrationRequestDTO);
+            if (!registerResponseDTO.IdentityResult.Succeeded)
+            {
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = false;
+                foreach (var e in registerResponseDTO.IdentityResult.Errors)
+                {
+                    _response.ErrorMessages.Add(e.Description);
+                }
+
+                return Ok(_response);
+            }
+
+            _response.StatusCode = HttpStatusCode.Created;
+            _response.Result = registerResponseDTO.User;
             return Ok(_response);
         }
     }

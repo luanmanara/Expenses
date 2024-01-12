@@ -4,6 +4,7 @@ using ExpensesAPI.Models.Dto;
 using ExpensesAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace ExpensesAPI.Controllers
@@ -25,11 +26,18 @@ namespace ExpensesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<APIResponse>> GetAllWallets()
+        public async Task<ActionResult<APIResponse>> GetAllWallets([FromQuery] string userId)
         {
             try
             {
-                List<WalletDTO> walletDTOList = _mapper.Map<List<WalletDTO>>(await _dbWallet.GetAllAsync());
+                List<Expression<Func<Wallet, bool>>> filters = new List<Expression<Func<Wallet, bool>>>();
+
+               
+                Expression<Func<Wallet, bool>> filterUserId = x => x.UserId == userId;
+                filters.Add(filterUserId);
+
+
+                List<WalletDTO> walletDTOList = _mapper.Map<List<WalletDTO>>(await _dbWallet.GetAllAsync(filters));
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = walletDTOList;
                 return Ok(_response);

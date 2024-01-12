@@ -1,5 +1,7 @@
 ﻿using ExpensesAPI.Models;
+using ExpensesAPI.Models.Dto;
 using MagicVilla_VillaAPI.Models.Dto;
+using Microsoft.AspNetCore.Identity;
 
 namespace ExpensesAPI.Repository.IRepository
 {
@@ -7,6 +9,6 @@ namespace ExpensesAPI.Repository.IRepository
     {
         bool isUniqueUser(string username);
         Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO);
-        Task<UserDTO> Register(RegistrationRequestDTO registrationRequestDTO);
+        Task<RegisterResponseDTO> Register(RegistrationRequestDTO registrationRequestDTO);
     }
 }
