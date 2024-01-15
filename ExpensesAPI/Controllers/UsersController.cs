@@ -1,8 +1,6 @@
-﻿using ExpensesAPI.Models;
-using ExpensesAPI.Repository.IRepository;
+﻿using ExpensesAPI.Repository.IRepository;
 using MagicVilla_VillaAPI.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 
 namespace ExpensesAPI.Controllers

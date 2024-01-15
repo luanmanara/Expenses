@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ExpensesAPI.Models;
 using ExpensesAPI.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.Net;
@@ -9,6 +10,7 @@ namespace ExpensesAPI.Controllers
 {
     [Route("api/period")]
     [ApiController]
+    [Authorize]
     public class PeriodController : ControllerBase
     {
         private readonly IPeriodRepository _dbPeriod;
